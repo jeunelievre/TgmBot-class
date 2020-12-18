@@ -3,7 +3,7 @@
 class TgmBot
 {
 	private $token;
-	private $webHook;
+	public $webHook;
 	private $data;
 	
 	public function __construct($token)
@@ -71,7 +71,7 @@ class TgmBot
 		ob_start();
 		print_r($data);
 		$out = ob_get_clean(); 
-		file_put_contents(__DIR__ . '/messageteletest.txt', $out);
+		file_put_contents(__DIR__ . '/messageclass.txt', $out);
 		return $data;
 	}
 	
@@ -93,6 +93,44 @@ class TgmBot
 			'reply_markup' => $reply_markup
 		);
 		if (isset($chat_id))
+		{
+			return $this->Request("sendMessage", $data);
+		} else {
+			return "chat_id is empty";
+		}
+	}
+	
+	public function answer($text="NULL", $disable_notification=NULL, $reply_markup=NULL,$reply_to_message_id=NULL,$disable_web_page_preview=NULL,$parse_mode=NULL)
+	{
+		$data = array(
+			'chat_id' => $this->chatId, 
+			'text' => $text,
+			'parse_mode' => $parse_mode,
+			'disable_web_page_preview' => $disable_web_page_preview,
+			'disable_notification' => $disable_notification,
+			'reply_to_message_id' => $reply_to_message_id,
+			'reply_markup' => $reply_markup
+		);
+		if (isset($this->chatId))
+		{
+			return $this->Request("sendMessage", $data);
+		} else {
+			return "chat_id is empty";
+		}
+	}
+	
+	public function replyMessage($text="NULL", $disable_notification=NULL, $reply_markup=NULL,$disable_web_page_preview=NULL,$parse_mode=NULL)
+	{
+		$data = array(
+			'chat_id' => $this->chatId,
+			'text' => $text,
+			'parse_mode' => $parse_mode,
+			'disable_web_page_preview' => $disable_web_page_preview,
+			'disable_notification' => $disable_notification,
+			'reply_to_message_id' => $this->messageId,
+			'reply_markup' => $reply_markup
+		);
+		if (isset($this->chatId))
 		{
 			return $this->Request("sendMessage", $data);
 		} else {
